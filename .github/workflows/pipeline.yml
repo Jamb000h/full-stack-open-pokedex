@@ -7,7 +7,7 @@ on:
   pull_request:   
     branches: [main]   
     types: [opened, synchronize]
-    
+
 jobs:
   simple_deployment_pipeline:
     runs-on: ubuntu-20.04
@@ -28,6 +28,11 @@ jobs:
         run: npx playwright install --with-deps
       - name: e2etests
         run: npm run test:e2e
+
+  deploy:
+    runs-on: ubuntu-20.04
+    if: ${{ github.event_name == 'push' }}
+    steps:
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only
         env:
