@@ -28,12 +28,11 @@ jobs:
         run: npx playwright install --with-deps
       - name: e2etests
         run: npm run test:e2e
-
-  deploy:
-    runs-on: ubuntu-20.04
-    if: ${{ github.event_name == 'push' }}
-    steps:
-      - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --remote-only
+      - name: setup-deploy
+        if: ${{ github.event_name == 'push' }}
+        uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: deploy
+        if: ${{ github.event_name == 'push' }}
+        run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
